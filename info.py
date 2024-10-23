@@ -18,8 +18,12 @@ def get_info (href ) :
         namad = div_tags[2].text if div_tags else None
         ghozresh_mahianeh = driver.find_element(By.TAG_NAME,"bdo").text
         spans = driver.find_elements(By.CLASS_NAME,"dynamic_comp")
-        yek_mah_montahi = spans[120].text
-        as_ebteday_sal = spans[116].text
+        try : 
+            yek_mah_montahi = spans[120].text
+            as_ebteday_sal = spans[116].text 
+        except : 
+            as_ebteday_sal = ""
+            yek_mah_montahi = ""
         return (
             namad,
             sal_mali,
