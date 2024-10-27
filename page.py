@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from info import get_info_30,get_info_code_31
+from info_code_30 import get_info_30
+from info_code_31 import get_info_code_31
 from time import sleep
 
 
@@ -57,8 +58,8 @@ def get_list_of_sams (href) :
 
     get_row(code_month,rows_tbody)
     get_row(code_month_31,rows_tbody)
-    get_row(code_6_month,rows_tbody)
-    get_row(code_year,rows_tbody)
+    # get_row(code_6_month,rows_tbody)
+    # get_row(code_year,rows_tbody)
 
     return (
         data_month,

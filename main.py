@@ -33,6 +33,7 @@ columns_31 = [
     "گزارش فعالیت ماهیانه منتهی",
     "بهای تمام شده",
     "ارزش بازار",
+    "نام شرکت"
 ]
 
 data_month = []
@@ -47,21 +48,21 @@ while page < 4 :
     month,data_month_31,six_month,year = get_list_of_sams(url)
     data_month = list(set( data_month + month))
     data_month_31 = list(set(data_month_31 + data_month_31))
-    data_6_month = list(set(data_6_month + six_month))
-    data_year = list(set(data_year + year))
+    # data_6_month = list(set(data_6_month + six_month))
+    # data_year = list(set(data_year + year))
     page = page + 1
 
 
 data_1 = pd.DataFrame(data=data_month,columns=columns)
-data_2 = pd.DataFrame(data=data_6_month,columns=columns)
-data_3 = pd.DataFrame(data=data_year,columns=columns)
+# data_2 = pd.DataFrame(data=data_6_month,columns=columns)
+# data_3 = pd.DataFrame(data=data_year,columns=columns)
 data_4 = pd.DataFrame(data=data_month_31,columns=columns_31)
 
 data_1.to_excel(file_name,engine="openpyxl",index=False,sheet_name="گزارش ماهانه ن-۳۰")
 
 with pd.ExcelWriter(file_name,engine="openpyxl",mode="a") as writer : 
-    data_2.to_excel(writer,sheet_name="گزارش ۶ ماه",index=False)
-    data_3.to_excel(writer,sheet_name="گزارش سالانه",index=False)
     data_4.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
+    # data_2.to_excel(writer,sheet_name="گزارش ۶ ماه",index=False)
+    # data_3.to_excel(writer,sheet_name="گزارش سالانه",index=False)
 
 driver.quit()
