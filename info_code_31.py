@@ -1,13 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from time import sleep
+from chrome import chrome_options
 
 persian_digits = "۰۱۲۳۴۵۶۷۸۹"
 english_digits = "0123456789"
 
 english_translate = str.maketrans(persian_digits,english_digits)
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
 
 
 def get_number (x) : 
@@ -27,13 +27,13 @@ def get_most_price_company (table,table_2) :
     for index,tr in enumerate(trs) : 
         tds = tr.find_elements(By.XPATH,"./td")
         if tds : 
-            result = get_number(tds[7].text.strip())
+            result = get_number(tds[10].text.strip())
             if result > most["price"] : 
                 most = {
                     "price" : result,
                     "name" : trs_table_2[index].text.strip() if trs_table_2 else None
                 }
-    return most["name"]
+    return most
 
 
 def get_info_code_31 (href,date) : 
@@ -65,33 +65,37 @@ def get_info_code_31 (href,date) :
             if last_row : 
                 tds = last_row.find_elements(By.XPATH,"./td")
             try : 
-                bahayeh_tamam_shodeh = tds[6].text.strip()
+                bahayeh_tamam_shodeh = tds[9].text.strip()
             except : 
                 bahayeh_tamam_shodeh = 0
             
             try : 
-                arzesh_bazar = tds[7].text.strip()
+                arzesh_bazar = tds[10].text.strip()
             except : 
                 arzesh_bazar = 0
         except : 
             table = driver.find_elements(By.XPATH,".//table")[0]
             trs = table.find_elements(By.XPATH,".//tr")
-            most = 0
+            most = {
+                "price" : 0,
+                "name" : None
+            }
 
             last_row = trs[-1]
             tds = last_row.find_elements(By.XPATH,".//td")
             bahayeh_tamam_shodeh = tds[10].text.strip()
             arzesh_bazar = tds[11].text.strip()
-
-
             for num,tr in enumerate(trs) : 
                 tds = tr.find_elements(By.XPATH,".//td")
                 if len(tds) > 3 : 
                     if tr != trs[0] and tr != trs[-1] and "سهام" not in tr.text : 
                         try :
                             price = get_number(tds[11].text.strip())
-                            if price > most : 
-                                most = tds[0].text.strip()
+                            if price > most["price"] : 
+                                most = {
+                                    "price" : price,
+                                    "name" : tds[0].text.strip()
+                                }
                         except  :
                             pass 
                 most_price_company = most
@@ -107,7 +111,8 @@ def get_info_code_31 (href,date) :
             ghozresh_mahianeh,
             str(bahayeh_tamam_shodeh).translate(english_translate),
             str(arzesh_bazar).translate(english_translate),
-            most_price_company
+            most_price_company["name"],
+            most_price_company["price"]
         )
     except :
         return None

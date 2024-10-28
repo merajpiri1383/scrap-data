@@ -3,9 +3,10 @@ from selenium.webdriver.common.by import By
 from info_code_30 import get_info_30
 from info_code_31 import get_info_code_31
 from time import sleep
+from chrome import chrome_options
 
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
 
 
 data_month = []

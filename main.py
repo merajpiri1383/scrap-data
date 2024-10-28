@@ -33,7 +33,8 @@ columns_31 = [
     "گزارش فعالیت ماهیانه منتهی",
     "بهای تمام شده",
     "ارزش بازار",
-    "نام شرکت"
+    "نام شرکت",
+    "ارزش شرکت"
 ]
 
 data_month = []
@@ -43,7 +44,7 @@ data_month_31 = []
 
 
 page = 1
-while page < 4 : 
+while page < 50 : 
     url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
     month,data_month_31,six_month,year = get_list_of_sams(url)
     data_month = list(set( data_month + month))

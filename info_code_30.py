@@ -1,12 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from chrome import chrome_options
 
 persian_digits = "۰۱۲۳۴۵۶۷۸۹"
 english_digits = "0123456789"
 
 english_translate = str.maketrans(persian_digits,english_digits)
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
 
 def get_info_30 (href ,date) : 
     driver.get(href)
