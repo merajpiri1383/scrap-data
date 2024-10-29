@@ -45,6 +45,15 @@ def get_info_30 (href ,date) :
                                 "product" : result,
                                 "name" : tds[0].text.strip()
                             }
+                            try :
+                                most_sell["nerkh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[23])
+                            except : 
+                                pass 
+
+                            try : 
+                                most_sell["mablagh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[24])
+                            except : 
+                                pass
                     except : 
                         pass
 
@@ -87,6 +96,8 @@ def get_info_30 (href ,date) :
             str(as_ebteday_sal_2).translate(english_translate),
             str(jam_phorosh_dahkeli).translate(english_translate),
             most_sell["name"],
+            str(most_sell["mablagh_phorosh"]).translate(english_translate),
+            str(most_sell["nerkh_phorosh"]).translate(english_translate),
         )
     except : 
         return None
