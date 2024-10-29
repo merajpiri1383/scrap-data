@@ -46,13 +46,16 @@ data_month_31 = []
 
 
 page = 1
-while page < 50 : 
-    url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
-    month,data_month_31,six_month,year = get_list_of_sams(url)
-    data_month = list(set( data_month + month))
-    data_month_31 = list(set(data_month_31 + data_month_31))
-    # data_6_month = list(set(data_6_month + six_month))
-    # data_year = list(set(data_year + year))
+while page < 101 : 
+    try :
+        url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
+        month,data_month_31,six_month,year = get_list_of_sams(url)
+        data_month = list(set( data_month + month))
+        data_month_31 = list(set(data_month_31 + data_month_31))
+        # data_6_month = list(set(data_6_month + six_month))
+        # data_year = list(set(data_year + year))
+    except : 
+        pass 
     page = page + 1
 
 
