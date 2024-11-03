@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from chrome import chrome_options
-import asyncio
-from datetime import datetime
-
 persian_digits = "۰۱۲۳۴۵۶۷۸۹"
 english_digits = "0123456789"
 
@@ -38,10 +35,11 @@ def get_most_price_company (table,table_2) :
     return most
 
 
-async def get_info_code_31 (href,date) : 
+def get_info_code_31 (href,date) :
+
+    print("start scrapping link 31 code ...")
 
     new_href = f"{href.split("sheetId")[0]}&sheetId=4"
-
 
     driver.get(new_href)
 
@@ -101,7 +99,8 @@ async def get_info_code_31 (href,date) :
                         except  :
                             pass 
                 most_price_company = most
-    
+
+        print("end scrapping link 31 code ...")
         return (
             namad,
             str(date).translate(english_translate),
@@ -116,26 +115,3 @@ async def get_info_code_31 (href,date) :
         )
     except :
         return None
-
-
-links = [
-    "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=b8OOObOOOZ8syKUksWsTAqyE02pg%3d%3d&rt=2&let=8&ct=2&ft=-1",
-    "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=Wj1eoZBuf6YDa2hVIjAQQQaQQQnQ%3d%3d&rt=2&let=8&ct=2&ft=-1",
-    "https://www.codal.ir/Reports/InterimStatement.aspx?LetterSerial=S6TNQQQaQQQuTggjytAbvKHPaXSw%3d%3d",
-]
-
-# def main () : 
-#     tasks = []
-#     loop = asyncio.new_event_loop()
-
-#     for url in links : 
-#         new_task = loop.create_task(get_info_code_31(url,"f f"))
-#         tasks.append(new_task)
-    
-#     results = asyncio.gather(*tasks)
-#     loop.run_until_complete(results)
-
-#     for item in results.result() : 
-#         print(item)
-    
-# main()

@@ -4,7 +4,8 @@ from info_code_30 import get_info_30
 from info_code_31 import get_info_code_31
 from time import sleep
 from chrome import chrome_options
-import asyncio
+
+
 
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -47,8 +48,6 @@ def get_links (code,rows_tbody) :
     return links    
 
 
-
-
 def get_list_of_sams (href) :
 
 
@@ -60,20 +59,18 @@ def get_list_of_sams (href) :
     links_30 =  get_links(code_month,rows_tbody)
     links_31 = get_links(code_month_31,rows_tbody)
 
-    loop = asyncio.new_event_loop()
-    tasks_31 = []
-    tasks_30 = []
-
-    for item in links_30 : 
-        new_task = loop.create_task(get_info_30(item["url"],item["date"]))
-        tasks_30.append(new_task)
-    for item in links_31 : 
-        new_task = loop.create_task(get_info_code_31(item["url"],item["date"]))
-        tasks_31.append(new_task)
+    for link in links_30 : 
+        result = get_info_30(link["url"],link["date"])
+        if result and len(result) == 13 : 
+            print(result)
+            data_month.append(result)
     
-    result_30 = asyncio.gather(*[*tasks_30,*tasks_31])
-
-    loop.run_until_complete(future=result_30)
+    for link in links_31 : 
+        result = get_info_code_31(link["url"],link["date"])
+        if result and len(result) == 10 : 
+            print(result)
+            data_month_31.append(result)
+        
 
     return (
         data_month,
@@ -83,6 +80,4 @@ def get_list_of_sams (href) :
     )
 
 
-result = get_list_of_sams(href="https://codal.ir/ReportList.aspx?PageNumber=49")
-
-
+# result = get_list_of_sams("https://codal.ir/ReportList.aspx?PageNumber=49")

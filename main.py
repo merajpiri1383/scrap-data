@@ -46,8 +46,8 @@ data_year = []
 data_month_31 = []
 
 
-page = 29
-while page < 50 : 
+page = 49
+while page < 55 : 
     try :
         print("scraping page " , page)
         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
@@ -55,8 +55,7 @@ while page < 50 :
         data_month = list(set( data_month + month))
         data_month_31 = list(set(data_month_31 + data_month_31))
         print("page " , page,"scraped")
-        # data_6_month = list(set(data_6_month + six_month))
-        # data_year = list(set(data_year + year))
+
     except : 
         pass 
     page = page + 1

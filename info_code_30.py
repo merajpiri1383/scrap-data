@@ -11,10 +11,10 @@ english_translate = str.maketrans(persian_digits,english_digits)
 
 driver = webdriver.Chrome(options=chrome_options)
 
-async def get_info_30 (href ,date) : 
+def get_info_30 (href ,date,data=[]) : 
     driver.get(href)
 
-    print("start link")
+    print("start scrapping link 30 code ...")
 
     most_sell = {
         "product" : 0,
@@ -22,7 +22,7 @@ async def get_info_30 (href ,date) :
     }
     
     try : 
-        
+
         div_tags = driver.find_elements(By.CLASS_NAME,"varios")
         sal_mali = div_tags[5].text.strip() if div_tags else None
         saramayed_sabt = div_tags[1].text.strip() if div_tags else 0
@@ -35,15 +35,15 @@ async def get_info_30 (href ,date) :
         jam_phorosh_dahkeli = 0
 
         try : 
-            yek_mah_montahi = str(tds[16].text.strip()).translate(english_translate)
+            yek_mah_montahi = str(driver.execute_script("return arguments[0].innerText",tds[16])).translate(english_translate)
         except : 
             yek_mah_montahi = 0
 
         for index,tr in enumerate(trs) : 
             tds = tr.find_elements(By.XPATH,".//td")
             if tds : 
-                if "جمع فروش داخلی" in tds[0].text.strip()  : 
-                    break
+                if "جمع" in tds[0].text.strip()  : 
+                    continue
                 elif index < 3 :
                     continue
                 else : 
@@ -70,12 +70,12 @@ async def get_info_30 (href ,date) :
         try : 
             for index,tr in enumerate(trs) : 
                 if "جمع فروش داخلی" in tr.text : 
-                    jam_phorosh_dahkeli = tr.find_elements(By.XPATH,"./td")[16].text.strip()
+                    jam_phorosh_dahkeli = driver.execute_script("return arguments[0].innerText",tr.find_elements(By.XPATH,"./td")[16])
         except : 
             jam_phorosh_dahkeli = 0
     
         try : 
-            as_ebteday_sal_1 = str(tds[16].text.strip()).translate(english_translate)
+            as_ebteday_sal_1 = str(driver.execute_script("return arguments[0].innerText",tds[16])).translate(english_translate)
         except : 
             as_ebteday_sal_1 = 0
 
@@ -91,17 +91,11 @@ async def get_info_30 (href ,date) :
         except : 
             most_sell_name = ""
 
-        try : 
-            mablagh_phorosh = str(most_sell["mablagh_phorosh"]).translate(english_translate)
-        except : 
-            mablagh_phorosh = ""
+        mablagh_phorosh = str(most_sell["mablagh_phorosh"]).translate(english_translate)
+        nerkh_phorosh = str(most_sell["nerkh_phorosh"]).translate(english_translate)
+        
+        print("end scrapping link 30 code ")
 
-        try :
-            nerkh_phorosh = str(most_sell["nerkh_phorosh"]).translate(english_translate)
-        except : 
-            nerkh_phorosh = ""
-
-        print("finish")
         return (
             namad,
             str(date).translate(english_translate),
@@ -119,46 +113,3 @@ async def get_info_30 (href ,date) :
         )
     except : 
         return None
-    
-urls = [
-    {
-        "url" : "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=755zzccQOxXFfNj2NERwhQ%3d%3d&rt=0&let=58&ct=0&ft=-1",
-        "date" : "d d"
-    },
-    {
-        "url" : "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=lYxN3FLKMiU2SnhkukA5xQ%3d%3d&rt=0&let=58&ct=0&ft=-1",
-        "date" : "r r"
-    },
-    {
-        "url" : "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=kiytceRd9SMRJVq3tzlpZA%3d%3d&rt=0&let=58&ct=0&ft=-1",
-        "date" : "r e"
-    },
-    {
-        "url" : "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=wCi2y5150WzxDmS9NL0W0g%3d%3d&rt=5&let=58&ct=0&ft=-1",
-        "date" : "e w"
-    },
-    {
-        "url" : "https://www.codal.ir/Reports/Decision.aspx?LetterSerial=feJHgCHe6UJPYVN97DBgJw%3d%3d&rt=0&let=58&ct=0&ft=-1",
-        "date" : "w e"
-    }
-]
-
-
-
-# def main () : 
-
-#     loop = asyncio.new_event_loop()
-#     tasks = []
-
-#     for item in urls : 
-#         new_task = loop.create_task(get_info_30(item["url"],item["date"]))
-#         tasks.append(new_task)
-
-#     results = asyncio.gather(*tasks)
-#     loop.run_until_complete(results)
-
-#     for item in results.result() :
-#         print(item)
-
-
-# main()
