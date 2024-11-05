@@ -46,9 +46,9 @@ data_year = []
 data_month_31 = []
 
 
-page = 49
-while page < 55 : 
-    try :
+page = 1
+while page < 101 : 
+    try : 
         print("scraping page " , page)
         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
         month,data_month_31,six_month,year = get_list_of_sams(url)

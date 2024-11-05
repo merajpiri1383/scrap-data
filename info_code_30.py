@@ -41,6 +41,7 @@ def get_info_30 (href ,date,data=[]) :
 
         for index,tr in enumerate(trs) : 
             tds = tr.find_elements(By.XPATH,".//td")
+
             if tds : 
                 if "جمع" in tds[0].text.strip()  : 
                     continue
@@ -56,12 +57,12 @@ def get_info_30 (href ,date,data=[]) :
                                 "name" : tds[0].text.strip()
                             }
                             try :
-                                most_sell["nerkh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[23])
+                                most_sell["nerkh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[15])
                             except : 
                                 pass 
 
                             try : 
-                                most_sell["mablagh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[24])
+                                most_sell["mablagh_phorosh"] = driver.execute_script("return arguments[0].innerText",tds[16])
                             except : 
                                 pass
                     except : 
@@ -75,7 +76,7 @@ def get_info_30 (href ,date,data=[]) :
             jam_phorosh_dahkeli = 0
     
         try : 
-            as_ebteday_sal_1 = str(driver.execute_script("return arguments[0].innerText",tds[16])).translate(english_translate)
+            as_ebteday_sal_1 = str(driver.execute_script("return arguments[0].innerText",tds[12])).translate(english_translate)
         except : 
             as_ebteday_sal_1 = 0
 
@@ -113,3 +114,9 @@ def get_info_30 (href ,date,data=[]) :
         )
     except : 
         return None
+    
+
+result = get_info_30("https://www.codal.ir/Reports/Decision.aspx?LetterSerial=QtnlOMOOObOOO2SQvHMBbgzURykA%3d%3d&rt=0&let=58&ct=0&ft=-1","f f")
+
+
+print(result)
