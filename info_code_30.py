@@ -114,9 +114,3 @@ def get_info_30 (href ,date,data=[]) :
         )
     except : 
         return None
-    
-
-result = get_info_30("https://www.codal.ir/Reports/Decision.aspx?LetterSerial=QtnlOMOOObOOO2SQvHMBbgzURykA%3d%3d&rt=0&let=58&ct=0&ft=-1","f f")
-
-
-print(result)
