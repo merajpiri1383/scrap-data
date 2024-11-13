@@ -20,9 +20,23 @@ columns_12_month = [
     "سود (زیان) انباشته پايان دوره",
     "سود (زیان) خالص هر سهم- ریال",
     "سود نقدی هر سهم (ریال)",
+    "سود (زیان) انباشته ابتدای دوره تعدیل‌شده",
+    "سود سهام مصوب (مجمع سال قبل)",
     "سهامدار ۱",
     "درصد مالکیت",
-    "مبلغ"
+    "مبلغ",
+    "سهامدار ۲",
+    "درصد مالکیت",
+    "مبلغ",
+    "سهامدار ۳",
+    "درصد مالکیت",
+    "مبلغ",
+    "سهامدار ۴",
+    "درصد مالکیت",
+    "مبلغ",
+    "سهامدار ۵",
+    "درصد مالکیت",
+    "مبلغ",
 ]
 
 
@@ -44,6 +58,7 @@ def get_info_12_month (url,date,namad) :
 
     tds = rows[3].find_elements(By.XPATH,".//td")
 
+
     for row in rows : 
         if "جمع" not in row.text : 
             tds = row.find_elements(By.XPATH,".//td")
@@ -58,6 +73,31 @@ def get_info_12_month (url,date,namad) :
     saham_daran_list.sort(key=lambda x : x["percent"],reverse=True)
     saham_daran_list = saham_daran_list[0:5]
 
+    try : 
+        sahm_1 = saham_daran_list[0]
+    except : 
+        sahm_1 = {"name": None,"sahm" : 0,"percent" : None}
+    
+    try : 
+        sahm_2 = saham_daran_list[1]
+    except : 
+        sahm_2 = {"name": None,"sahm" : 0,"percent" : None}
+    
+    try : 
+        sahm_3 = saham_daran_list[2]
+    except : 
+        sahm_3 = {"name": None,"sahm" : 0,"percent" : None}
+
+    try : 
+        sahm_4 = saham_daran_list[3]
+    except : 
+        sahm_4 = {"name": None,"sahm" : 0,"percent" : None}
+    
+    try :
+        sahm_5 = saham_daran_list[4]
+    except : 
+        sahm_5 = {"name": None,"sahm" : 0,"percent" : None}
+
     sod_table = driver.find_element(By.ID,"ucAssemblyPRetainedEarning_grdAssemblyProportionedRetainedEarning")
 
     rows_sod_table = sod_table.find_elements(By.XPATH,".//tr")
@@ -67,32 +107,55 @@ def get_info_12_month (url,date,namad) :
     sod_anbashteh_payan_doreh = None
     sod_saham_mosavab_jari = None
     sod_anbashteh_payan_doreh_mosavabat = None
+    sod_anbashted_ebreday_doreh = None
+    sod_sal_ghabl = None
 
     if len (rows_sod_table) > 3 : 
         for index,row in enumerate(rows_sod_table) : 
             if "انباشته پايان دوره" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_anbashteh_payan_doreh = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
+                sod_anbashteh_payan_doreh = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
             if "سود نقدی هر سهم" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_naghdi_has_sahm = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
+                sod_naghdi_has_sahm = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
             
             if "سهام مصوب" in row.text.strip() and "جاری" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_saham_mosavab_jari = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
+                sod_saham_mosavab_jari = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
             
             if "لحاظ نمودن مصوبات مجمع" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_anbashteh_payan_doreh_mosavabat = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
+                sod_anbashteh_payan_doreh_mosavabat = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
 
             if "خالص هر سهم" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_khales_har_sahm = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
+                sod_khales_har_sahm = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
             
             if "نقدی هر سهم" in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
-                sod_naghdi_har_sahm = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(translate_text)
-    
+                sod_naghdi_har_sahm = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
+            
+            if "انباشته ابتدای دوره تعدیل‌شده" in row.text.strip() : 
+                sod_anbashted_ebreday_doreh = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
+
+            if "سود سهام مصوب (مجمع سال قبل)" in row.text.strip() : 
+                sod_sal_ghabl = str(driver.execute_script(
+                    "return arguments[0].innerText",tds[2])
+                ).translate(translate_text)
 
     print("end scraping 12 month code .")
     return (
@@ -104,7 +167,21 @@ def get_info_12_month (url,date,namad) :
         sod_anbashteh_payan_doreh_mosavabat,
         sod_khales_har_sahm,
         sod_naghdi_har_sahm,
-        saham_daran_list[0]["name"],
-        saham_daran_list[0]["percent"],
-        int(saham_daran_list[0]["sahm"]) * int(sod_naghdi_har_sahm)
+        sod_anbashted_ebreday_doreh,
+        sod_sal_ghabl,
+        sahm_1["name"],
+        sahm_1["percent"],
+        int(sahm_1["sahm"]) * int(sod_naghdi_har_sahm),
+        sahm_2["name"],
+        sahm_2["percent"],
+        int(sahm_2["sahm"]) * int(sod_naghdi_har_sahm),
+        sahm_3["name"],
+        sahm_3["percent"],
+        int(sahm_3["sahm"]) * int(sod_naghdi_har_sahm),
+        sahm_4["name"],
+        sahm_4["percent"],
+        int(sahm_4["sahm"]) * int(sod_naghdi_har_sahm),
+        sahm_5["name"],
+        sahm_5["percent"],
+        int(sahm_5["sahm"]) * int(sod_naghdi_har_sahm),
     )

@@ -48,8 +48,8 @@ data_year = []
 data_month_31 = []
 
 
-page = 20
-while page < 50 : 
+page = 8
+while page < 20 : 
     try : 
         print("scraping page " , page)
         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
