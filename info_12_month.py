@@ -60,7 +60,8 @@ def get_info_12_month (url,date,namad) :
 
 
     for row in rows : 
-        if "جمع" not in row.text : 
+        element = driver.execute_script("return arguments[0].innerText",row)
+        if "جمع" not in element : 
             tds = row.find_elements(By.XPATH,".//td")
             if len(tds) > 2 : 
                 data = {
@@ -112,47 +113,48 @@ def get_info_12_month (url,date,namad) :
 
     if len (rows_sod_table) > 3 : 
         for index,row in enumerate(rows_sod_table) : 
-            if "انباشته پايان دوره" in row.text.strip() : 
+            element = driver.execute_script("return arguments[0].innerText",row)
+            if "انباشته پايان دوره" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_anbashteh_payan_doreh = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
-            if "سود نقدی هر سهم" in row.text.strip() : 
+            if "سود نقدی هر سهم" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_naghdi_has_sahm = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
             
-            if "سهام مصوب" in row.text.strip() and "جاری" in row.text.strip() : 
+            if "سهام مصوب" in element and "جاری" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_saham_mosavab_jari = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
             
-            if "لحاظ نمودن مصوبات مجمع" in row.text.strip() : 
+            if "لحاظ نمودن مصوبات مجمع" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_anbashteh_payan_doreh_mosavabat = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
 
-            if "خالص هر سهم" in row.text.strip() : 
+            if "خالص هر سهم" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_khales_har_sahm = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
             
-            if "نقدی هر سهم" in row.text.strip() : 
+            if "نقدی هر سهم" in element : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sod_naghdi_har_sahm = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
             
-            if "انباشته ابتدای دوره تعدیل‌شده" in row.text.strip() : 
+            if "انباشته ابتدای دوره تعدیل‌شده" in element : 
                 sod_anbashted_ebreday_doreh = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)
 
-            if "سود سهام مصوب (مجمع سال قبل)" in row.text.strip() : 
+            if "سود سهام مصوب (مجمع سال قبل)" in element : 
                 sod_sal_ghabl = str(driver.execute_script(
                     "return arguments[0].innerText",tds[2])
                 ).translate(translate_text)

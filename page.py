@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from info_code_30 import get_info_30
 from info_code_31 import get_info_code_31
 from info_12_month import get_info_12_month
+from info_3_month import get_info_3_month
 from time import sleep
 from chrome import chrome_options
 
@@ -21,7 +22,6 @@ code_year = "ن-۵۲"
 code_month_31 = "ن-۳۱"
 
 list_href_31 = []
-
 
 def get_links (code,rows_tbody) : 
     links = []
@@ -48,12 +48,12 @@ def get_links (code,rows_tbody) :
     return links    
 
 
-def get_list_of_12_month (rows_tobody) : 
+def get_list_of_link_with_namad (code,rows_tbody) : 
     links = []
 
     try :
-        for row in rows_tobody : 
-            if code_year in row.text.strip() : 
+        for row in rows_tbody : 
+            if code in row.text.strip() : 
                 tds = row.find_elements(By.XPATH,".//td")
 
                 if len(tds) > 3 : 
@@ -77,10 +77,17 @@ def get_list_of_sams (href) :
     table = driver.find_element(By.TAG_NAME,"table") 
     rows_tbody = table.find_elements(By.XPATH,".//tbody/tr")
 
+    links_3 = get_list_of_link_with_namad(code=code_3_month,rows_tbody=rows_tbody)
+
+    for link in links_3 : 
+        result = get_info_3_month(**link)
+        print(result)
+        data_3_month.append(result)
+
     links_30 =  get_links(code_month,rows_tbody)
     links_31 = get_links(code_month_31,rows_tbody)
 
-    lists_12_month = get_list_of_12_month(rows_tbody)
+    lists_12_month = get_list_of_link_with_namad( code_year,rows_tbody)
 
     for link in lists_12_month : 
         result = get_info_12_month(**link)
@@ -106,5 +113,3 @@ def get_list_of_sams (href) :
         data_3_month,
         data_year
     )
-
-result = get_list_of_sams("https://www.codal.ir/ReportList.aspx?PageNumber=10")

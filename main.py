@@ -4,6 +4,7 @@ from jdatetime import datetime
 from page import get_list_of_sams
 from chrome import chrome_options
 from info_12_month import columns_12_month
+from info_3_month import columns_3_month
 
 file_name = f"Data {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.xlsx"
 
@@ -48,14 +49,15 @@ data_year = []
 data_month_31 = []
 
 
-page = 8
-while page < 20 : 
+page = 20
+while page < 31 : 
     try : 
         print("scraping page " , page)
         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
         month,data_month_31,three_month,year = get_list_of_sams(url)
         data_month = list(set( data_month + month))
         data_month_31 = list(set(data_month_31 + data_month_31))
+        data_3_month = list(set(data_3_month + three_month))
         data_year = list(set(data_year + year))
         print("page " , page,"scraped")
 
@@ -66,11 +68,13 @@ while page < 20 :
 data_1 = pd.DataFrame(data=data_month,columns=columns)
 data_2 = pd.DataFrame(data=data_month_31,columns=columns_31)
 data_3 = pd.DataFrame(data=data_year,columns=columns_12_month)
+data_4 = pd.DataFrame(data=data_3_month,columns=columns_3_month)
 
 data_1.to_excel(file_name,engine="openpyxl",index=False,sheet_name="گزارش ماهانه ن-۳۰")
 
 with pd.ExcelWriter(file_name,engine="openpyxl",mode="a") as writer : 
     data_2.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
     data_3.to_excel(writer,sheet_name="گزارش سالیانه",index=False)
+    data_4.to_excel(writer,sheet_name="سه ماهه")
 
 driver.quit()
