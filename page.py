@@ -94,7 +94,7 @@ def get_list_of_sams (href) :
         print(result)
         data_year.append(result)
 
-    for link in links_30 : 
+    for link in links_30 :
         result = get_info_30(link["url"],link["date"])
         if result and len(result) == 13 : 
             print(result)
@@ -113,3 +113,6 @@ def get_list_of_sams (href) :
         data_3_month,
         data_year
     )
+
+
+result = get_list_of_sams("https://www.codal.ir/")
