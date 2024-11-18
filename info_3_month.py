@@ -2,8 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from chrome import chrome_options
 from time import sleep
-persian_digits = "۰۱۲۳۴۵۶۷۸۹()"
-english_digits = "0123456789  "
+persian_digits = "۰۱۲۳۴۵۶۷۸۹"
+english_digits = "0123456789"
 
 english_translate = str.maketrans(persian_digits,english_digits)
 
@@ -101,15 +101,13 @@ def get_info_3_month (namad,date,url) :
         for row in rows : 
             element = driver.execute_script("return arguments[0].innerText",row)
 
-            if bool("عملياتي" in element and "درآمدهاي" in element and "بهاى" not in element) or (
-                "عملیاتی" in element and "درآمدهای" in element and "بهاى" not in element
-            ) : 
+            if bool ("درآمدها" in element and "عمليات" in element and "متفرقه" not in element and "سرمايه‌گذار" not in element and "بها" not in element) : 
                 tds = row.find_elements(By.XPATH,".//td")
                 daramad_amaliati = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
                 daramad_amaliati_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
                 daramad_amaliati_darsad = str(driver.execute_script("return arguments[0].innerText",tds[4])).translate(english_translate)
-
-            if bool ("ساير" in element and "درآمدها" in element and "هزينه" not in element) : 
+            
+            if bool ("ساير" in element and "درآمدها" in element and "متفرقه" not in element) : 
                 tds = row.find_elements(By.XPATH,".//td")
                 sayer_daramad = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
                 sayer_daramad_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
@@ -121,9 +119,10 @@ def get_info_3_month (namad,date,url) :
                 bahay_tamam_shodeh_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
                 bahay_tamam_shodeh_darsad = str(driver.execute_script("return arguments[0].innerText",tds[4])).translate(english_translate)
 
-            if "غيرعملياتى" in element : 
+            if bool ("ساير" in element and "درآمدها" in element and "متفرقه" in element)  : 
                 tds = row.find_elements(By.XPATH,".//td")
                 daramd_gher_amaliati = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
+                daramd_gher_amaliati_sal_ghabl =  str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
                 daramd_gher_amaliati_darad = str(driver.execute_script("return arguments[0].innerText",tds[4])).translate(english_translate)
 
             if bool("سود" in element and "خالص" in element and "عمليات" not in element) and (
@@ -207,13 +206,11 @@ def get_info_3_month (namad,date,url) :
                 daryaft_tegari = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
                 daryaft_tegari_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
 
-            if bool("جاری" in element and "دارایی‌های" in element and "جمع" in element and "غیرجاری" not in element) or bool(
-                "جاري" in element and "دارايي‌هاي" in element and "جمع" in element and "غیرجاری" not in element
-            ) : 
+            if bool ("جمع" in element and "دارا" in element and "جار" not in element ) : 
                 tds = row.find_elements(By.XPATH,".//td")
                 jam_daraee_jari = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
-
             # 14 , 41 , 42
+
             if bool("جمع" in element and "دارا" in element and "جار" in element and "غير" not in element) : 
                 tds = row.find_elements(By.XPATH,".//td")
                 jam_daraee = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
@@ -271,12 +268,11 @@ def get_info_3_month (namad,date,url) :
                 jaryan_sarmayeh_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
             
             # 53 , 54 
-            if bool ("جريان خالص ورود (خروج) نقد حاصل از فعاليت‌ه" in element and "سرمايه‌گذار" in element) : 
+            if bool ("جريان خالص ورود (خروج) نقد حاصل از فعاليت‌ه" in element and "مال" in element) : 
                 tds = tr.find_elements(By.XPATH,".//td")
                 jaryan_mali = str(driver.execute_script("return arguments[0].innerText",tds[1])).translate(english_translate)
                 jaryan_mali_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[2])).translate(english_translate)
 
-        print(daramad_amaliati)
         print("end scraping code 10 .")
         return (
             str(date).translate(english_translate), # 1
@@ -329,10 +325,10 @@ def get_info_3_month (namad,date,url) :
         return None
     
 
-# result = get_info_3_month(
-#     url="https://codal.ir/Reports/Decision.aspx?LetterSerial=TcYYGjt1gXLTLPGOmyTJ7g%3d%3d&rt=9&let=6&ct=0&ft=-1",
-#     date="۱۴۰۳/۰۸/۲۷ ۱۸:۰۴:۴۸",
-#     namad="تملت"
-# )
+result = get_info_3_month(
+    url="https://codal.ir/Reports/Decision.aspx?LetterSerial=TcYYGjt1gXLTLPGOmyTJ7g%3d%3d&rt=9&let=6&ct=0&ft=-1",
+    date="۱۴۰۳/۰۸/۲۷ ۱۸:۰۴:۴۸",
+    namad="تملت"
+)
 
-# print(result)
+print(result)
