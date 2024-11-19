@@ -13,6 +13,7 @@ driver = webdriver.Chrome(options=chrome_options)
 columns_3_month = [
     "تاریخ", # 1
     "ساعت", # 2 
+    "عنوان اطلاعیه", # 60
     "نماد", # 3 
     "سال مالی", # 4 
     "3 ماهه منتهی به", # 25
@@ -56,20 +57,60 @@ columns_3_month = [
     "سود سهام پرداختني ", # 55
     "پيش‌دريافت‌ها", # 56
     "جمع بدهي‌ها", # 57
+    "سربارتوليد", # 58
+    "هزینه انرژی (آب، برق، گاز و سوخت)", # 59
 ]
 
 def get_number (x) : 
     return int(str(x).replace(",","").replace(")","").replace("(","").translate(english_translate))
 
 
-def get_info_3_month (namad,date,url) :
+def get_info_3_month (namad,date,url,title) :
 
     print("start scrapping link 10 code ...")
+
+    new_href = f"{url.split("sheetId")[0]}&sheetId=22"
+
+    driver.get(new_href)
+    sleep(.2)
+
+    trs = driver.find_elements(By.XPATH,".//tr")
+
+    hazineh_ha = None
+
+    for tr in trs : 
+        tag = driver.execute_script("return arguments[0].innerText",tr)
+
+        if bool ("هزینه" in tag and "انرژ" in tag and "آب" in tag and "گاز" in tag) : 
+            tds = tr.find_elements(By.XPATH,".//td")
+            hazineh_ha = driver.execute_script("return arguments[0].innerText",tds[1])
+            if hazineh_ha : 
+                hazineh_ha = str(hazineh_ha).translate(english_translate)
+
+    new_href = f"{url.split("sheetId")[0]}&sheetId=20"
+
+    driver.get(new_href)
+    sleep(.2)
+
+    trs = driver.find_elements(By.XPATH,".//tr")
+
+    sarbar_tolid = None
+
+    for tr in trs : 
+        tag = driver.execute_script("return arguments[0].innerText",tr)
+        
+        if bool ("سربار" in tag and "توليد" in tag) :
+            tds = tr.find_elements(By.XPATH,".//td")
+            sarbar_tolid = driver.execute_script("return arguments[0].innerText",tds[1])
+            if sarbar_tolid : 
+                sarbar_tolid = str(sarbar_tolid).translate(english_translate)
+            break
+    
 
     new_href = f"{url.split("sheetId")[0]}&sheetId=1"
 
     driver.get(new_href)
-    sleep(.5)
+    sleep(.2)
 
     try : 
         div_tags = driver.find_elements(By.CLASS_NAME,"varios")
@@ -136,7 +177,7 @@ def get_info_3_month (namad,date,url) :
         new_href = f"{url.split("sheetId")[0]}&sheetId=0"
 
         driver.get(new_href)
-        sleep(.5)
+        sleep(.2)
 
         table = driver.find_element(By.CLASS_NAME,"rayanDynamicStatement")
         rows = table.find_elements(By.XPATH,".//tbody/tr")
@@ -238,7 +279,7 @@ def get_info_3_month (namad,date,url) :
         new_href = f"{url.split("sheetId")[0]}&sheetId=9"
 
         driver.get(new_href)
-        sleep(.5)
+        sleep(.2)
 
         table = driver.find_element(By.CLASS_NAME,"rayanDynamicStatement")
         trs = table.find_elements(By.XPATH,".//tr")
@@ -277,6 +318,7 @@ def get_info_3_month (namad,date,url) :
         return (
             str(date).translate(english_translate), # 1
             str(time).translate(english_translate), # 2
+            title , # 60
             namad, # 3
             sal_mali, # 4
             semaheh_montahi, # 25
@@ -320,15 +362,17 @@ def get_info_3_month (namad,date,url) :
             sod_saham_pardakhti, # 55
             pish_daryapht_ha, # 56
             jam_bedehi_ha, # 57
+            sarbar_tolid , # 58
+            hazineh_ha, # 59
         )
     except : 
         return None
     
 
-result = get_info_3_month(
-    url="https://codal.ir/Reports/Decision.aspx?LetterSerial=TcYYGjt1gXLTLPGOmyTJ7g%3d%3d&rt=9&let=6&ct=0&ft=-1",
-    date="۱۴۰۳/۰۸/۲۷ ۱۸:۰۴:۴۸",
-    namad="تملت"
-)
+# result = get_info_3_month(
+#     url="https://codal.ir/Reports/Decision.aspx?LetterSerial=UICOmrhQQQaQQQ3Hc3NelRfcyROw%3d%3d&rt=0&let=6&ct=0&ft=-1",
+#     date="۱۴۰۳/۰۸/۲۹ ۱۴:۱۵:۱۱",
+#     namad="کنور"
+# )
 
-print(result)
+# print(result)

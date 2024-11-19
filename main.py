@@ -50,7 +50,7 @@ data_month_31 = []
 
 
 page = 1
-while page < 2 : 
+while page < 5 : 
     try : 
         print("scraping page " , page)
         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
@@ -66,15 +66,15 @@ while page < 2 :
     page = page + 1
 
 data_1 = pd.DataFrame(data=data_month,columns=columns)
-# data_2 = pd.DataFrame(data=data_month_31,columns=columns_31)
-# data_3 = pd.DataFrame(data=data_year,columns=columns_12_month)
+data_2 = pd.DataFrame(data=data_month_31,columns=columns_31)
+data_3 = pd.DataFrame(data=data_year,columns=columns_12_month)
 data_4 = pd.DataFrame(data=data_3_month,columns=columns_3_month)
 
 data_1.to_excel(file_name,engine="openpyxl",index=False,sheet_name="گزارش ماهانه ن-۳۰")
 
 with pd.ExcelWriter(file_name,engine="openpyxl",mode="a") as writer : 
-    # data_2.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
-    # data_3.to_excel(writer,sheet_name="گزارش سالیانه",index=False)
+    data_2.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
+    data_3.to_excel(writer,sheet_name="گزارش سالیانه",index=False)
     data_4.to_excel(writer,sheet_name="سه ماهه",index=False)
 
 driver.quit()
