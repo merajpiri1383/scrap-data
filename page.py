@@ -116,3 +116,5 @@ def get_list_of_sams (href) :
         data_3_month,
         data_year
     )
+
+result = get_list_of_sams("https://codal.ir/ReportList.aspx")

@@ -23,7 +23,6 @@ columns_3_month = [
     "بهاى تمام شده درآمدهاي عملياتي " , # 27
     "بهاى تمام شده درآمدهاي عملياتي سال گذشته" , # 28
     "درصد تغيير", # 29
-    "ساير درآمدها سه ماهه جاری" , #30 
     "ساير درآمدها سال گذشته" , # 31 
     "درصد تغيير", # 32
     "ساير درآمدها و هزينه غيرعملياتى سه ماهه جاری", # 9
@@ -59,6 +58,9 @@ columns_3_month = [
     "جمع بدهي‌ها", # 57
     "سربارتوليد", # 58
     "هزینه انرژی (آب، برق، گاز و سوخت)", # 59
+    "برآورد فروش  تاپایان سال", # 61,
+    "برآورد بهای تمام شده  تا پایان سال", # 62
+    "ساير درآمدها" , #30 
 ]
 
 def get_number (x) : 
@@ -105,6 +107,29 @@ def get_info_3_month (namad,date,url,title) :
             if sarbar_tolid : 
                 sarbar_tolid = str(sarbar_tolid).translate(english_translate)
             break
+    table = driver.find_element(By.ID,"2307")
+    trs = table.find_elements(By.XPATH,".//tr")
+
+    try :
+        baravord_ta_payan_sal = driver.execute_script("return arguments[0].innerText",trs[1].find_elements(By.XPATH,".//td")[7])
+        if baravord_ta_payan_sal : 
+            baravord_ta_payan_sal = str(baravord_ta_payan_sal).translate(english_translate)
+    except : 
+        baravord_ta_payan_sal = None
+
+    
+    try :
+        baravord_baha_ta_payan_sal = driver.execute_script("return arguments[0].innerText",trs[2].find_elements(By.XPATH,".//td")[7])
+        if baravord_baha_ta_payan_sal : 
+            baravord_baha_ta_payan_sal = str(baravord_baha_ta_payan_sal).translate(english_translate)
+    except : 
+        baravord_baha_ta_payan_sal = None
+
+
+    new_href = f"{url.split("sheetId")[0]}&sheetId=1"
+
+    driver.get(new_href)
+    sleep(.2)
     
 
     new_href = f"{url.split("sheetId")[0]}&sheetId=1"
@@ -330,7 +355,6 @@ def get_info_3_month (namad,date,url,title) :
             bahay_tamam_shodeh , # 27
             bahay_tamam_shodeh_sal_ghabl, # 28 
             bahay_tamam_shodeh_darsad, # 29
-            sayer_daramad, # 30 
             sayer_daramad_sal_ghabl , # 31 ,
             sayer_daramad_darasd , # 32
             daramd_gher_amaliati, # 9
@@ -366,6 +390,19 @@ def get_info_3_month (namad,date,url,title) :
             jam_bedehi_ha, # 57
             sarbar_tolid , # 58
             hazineh_ha, # 59
+            baravord_ta_payan_sal, # 61
+            baravord_baha_ta_payan_sal, # 62
+            sayer_daramad, # 30 
         )
     except : 
         return None
+
+
+result = get_info_3_month(
+    date="d d",
+    namad="سخزر",
+    title="title",
+    url="https://codal.ir/Reports/Decision.aspx?LetterSerial=AVPlndV9YW5cumGlK23Zyw%3d%3d&rt=0&let=6&ct=0&ft=-1",
+)
+
+print(result)
