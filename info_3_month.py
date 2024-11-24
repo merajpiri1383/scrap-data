@@ -396,13 +396,3 @@ def get_info_3_month (namad,date,url,title) :
         )
     except : 
         return None
-
-
-result = get_info_3_month(
-    date="d d",
-    namad="سخزر",
-    title="title",
-    url="https://codal.ir/Reports/Decision.aspx?LetterSerial=AVPlndV9YW5cumGlK23Zyw%3d%3d&rt=0&let=6&ct=0&ft=-1",
-)
-
-print(result)

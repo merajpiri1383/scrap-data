@@ -71,7 +71,7 @@ def get_list_of_link_with_namad (code,rows_tbody) :
     except : pass
 
 
-def get_list_of_sams (href) :
+def get_list_of_sams (href,codes=[]) :
 
 
     driver.get(href)
@@ -79,35 +79,36 @@ def get_list_of_sams (href) :
     table = driver.find_element(By.TAG_NAME,"table") 
     rows_tbody = table.find_elements(By.XPATH,".//tbody/tr")
 
-    links_3 = get_list_of_link_with_namad(code=code_3_month,rows_tbody=rows_tbody)
+    if code_month in codes : 
+        links_30 =  get_links(code_month,rows_tbody)
+        for link in links_30 :
+            result = get_info_30(link["url"],link["date"])
+            if result and len(result) == 13 : 
+                print(result)
+                data_month.append(result)
 
-    for link in links_3 : 
-        result = get_info_3_month(**link)
-        print(result)
-        if result : 
-            data_3_month.append(result)
+    if code_month_31 in codes : 
+        links_31 = get_links(code_month_31,rows_tbody)
+        for link in links_31 : 
+            result = get_info_code_31(link["url"],link["date"])
+            if result and len(result) == 10 : 
+                print(result)
+                data_month_31.append(result)
 
-    links_30 =  get_links(code_month,rows_tbody)
-    links_31 = get_links(code_month_31,rows_tbody)
-
-    lists_12_month = get_list_of_link_with_namad( code_year,rows_tbody)
-
-    for link in lists_12_month : 
-        result = get_info_12_month(**link)
-        print(result)
-        data_year.append(result)
-
-    for link in links_30 :
-        result = get_info_30(link["url"],link["date"])
-        if result and len(result) == 13 : 
+    if code_3_month in codes : 
+        links_3 = get_list_of_link_with_namad(code=code_3_month,rows_tbody=rows_tbody)
+        for link in links_3 : 
+            result = get_info_3_month(**link)
             print(result)
-            data_month.append(result)
+            if result : 
+                data_3_month.append(result)
     
-    for link in links_31 : 
-        result = get_info_code_31(link["url"],link["date"])
-        if result and len(result) == 10 : 
+    if code_year in codes : 
+        lists_12_month = get_list_of_link_with_namad( code_year,rows_tbody)
+        for link in lists_12_month : 
+            result = get_info_12_month(**link)
             print(result)
-            data_month_31.append(result)
+            data_year.append(result)
         
 
     return (
@@ -116,5 +117,3 @@ def get_list_of_sams (href) :
         data_3_month,
         data_year
     )
-
-result = get_list_of_sams("https://codal.ir/ReportList.aspx")

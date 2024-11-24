@@ -49,32 +49,50 @@ data_year = []
 data_month_31 = []
 
 
-page = 1
-while page < 4 : 
-    try : 
-        print("scraping page " , page)
-        url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
-        month,data_month_31,three_month,year = get_list_of_sams(url)
-        data_month = list(set( data_month + month))
-        data_month_31 = list(set(data_month_31 + data_month_31))
-        data_3_month = list(set(data_3_month + three_month))
-        data_year = list(set(data_year + year))
-        print("page " , page,"scraped")
+# # page = 1
+# # while page < 4 : 
+# #     try : 
+# #         print("scraping page " , page)
+# #         url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
+# #         month,data_month_31,three_month,year = get_list_of_sams(url)
+# #         data_month = list(set( data_month + month))
+# #         data_month_31 = list(set(data_month_31 + data_month_31))
+# #         data_3_month = list(set(data_3_month + three_month))
+# #         data_year = list(set(data_year + year))
+# #         print("page " , page,"scraped")
 
-    except : 
-        pass 
-    page = page + 1
+# #     except : 
+# #         pass 
+# #     page = page + 1
 
-data_1 = pd.DataFrame(data=data_month,columns=columns)
-data_2 = pd.DataFrame(data=data_month_31,columns=columns_31)
-data_3 = pd.DataFrame(data=data_year,columns=columns_12_month)
-data_4 = pd.DataFrame(data=data_3_month,columns=columns_3_month)
 
-data_1.to_excel(file_name,engine="openpyxl",index=False,sheet_name="گزارش ماهانه ن-۳۰")
+def run_script(start_page,end_Page,codes=[]) : 
+    page = start_page 
 
-with pd.ExcelWriter(file_name,engine="openpyxl",mode="a") as writer : 
-    data_2.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
-    data_3.to_excel(writer,sheet_name="گزارش سالیانه",index=False)
-    data_4.to_excel(writer,sheet_name="سه ماهه",index=False)
+    while end_Page > page : 
+        try :
+            print(page)
+            url = f"https://codal.ir/ReportList.aspx?PageNumber={page}"
+            page = page + 1
+            month,data_month_31,three_month,year = get_list_of_sams(url,codes=codes)
+            data_month = list(set( data_month + month))
+            data_month_31 = list(set(data_month_31 + data_month_31))
+            data_3_month = list(set(data_3_month + three_month))
+            data_year = list(set(data_year + year))
+            print("page " , page,"scraped")
+        except : 
+            pass 
 
-driver.quit()
+# # data_1 = pd.DataFrame(data=data_month,columns=columns)
+# # data_2 = pd.DataFrame(data=data_month_31,columns=columns_31)
+# # data_3 = pd.DataFrame(data=data_year,columns=columns_12_month)
+# # data_4 = pd.DataFrame(data=data_3_month,columns=columns_3_month)
+
+# # data_1.to_excel(file_name,engine="openpyxl",index=False,sheet_name="گزارش ماهانه ن-۳۰")
+
+# # with pd.ExcelWriter(file_name,engine="openpyxl",mode="a") as writer : 
+# #     data_2.to_excel(writer,sheet_name="گزارش ماهانه ن-۳۱",index=False)
+# #     data_3.to_excel(writer,sheet_name="گزارش سالیانه",index=False)
+# #     data_4.to_excel(writer,sheet_name="سه ماهه",index=False)
+
+# # driver.quit()
