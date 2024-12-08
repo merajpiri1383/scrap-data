@@ -8,6 +8,18 @@ english_translate = str.maketrans(persian_digits,english_digits)
 
 driver = webdriver.Chrome(options=chrome_options)
 
+columns_31 = [
+    "نماد",
+    "تاریخ",
+    "زمان انتشار",
+    "سال مالی",
+    "سرمایه ثبت شده",
+    "گزارش فعالیت ماهیانه منتهی",
+    "بهای تمام شده",
+    "ارزش بازار",
+    "نام شرکت",
+    "ارزش شرکت"
+]
 
 def get_number (x) : 
     return int(str(x).replace(",","").replace(")","").replace("(","").translate(english_translate))

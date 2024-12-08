@@ -2,6 +2,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from chrome import chrome_options
 
+columns_30 = [
+    "نماد",
+    "تاریخ",
+    "زمان انتشار",
+    "سال مالی",
+    "سرمایه ثبت شده",
+    "گزارش فعالیت ماهیانه منتهی",
+    "دوره یک ماه منتهی",
+    "از ابتدای سال مالی",
+    "از ابتدای سال مالی تا تاریخ سال گذشته",
+    "جمع فروش داخلی",
+    "محصول",
+    "مبلغ فروش محصول",
+    "نرخ فروش محصول"    
+]
+
 
 persian_digits = "۰۱۲۳۴۵۶۷۸۹"
 english_digits = "0123456789"

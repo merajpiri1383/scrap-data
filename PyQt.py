@@ -1,6 +1,7 @@
 import sys
 from page import code_3_month,code_month_31,code_year,code_month
-from main import run_script
+from main import get_by_date
+from threading import Thread
 from PyQt5.QtWidgets import (
     QMainWindow,
     QApplication,
@@ -9,13 +10,18 @@ from PyQt5.QtWidgets import (
     QWidget,
     QCheckBox,
     QHBoxLayout,
-    QSpinBox,
-    QLabel
+    QLabel,
+    QTextEdit,
+    QMessageBox
 )
 
 from PyQt5.QtGui import (
     QFont
 )
+import re
+
+
+date_re = re.compile("^[0-9]{4}/[0-9]{2}/[0-9]{2}$")
 
 
 class MainWindow (QMainWindow) : 
@@ -72,29 +78,25 @@ class MainWindow (QMainWindow) :
 
         row_2 = QHBoxLayout()
 
-        self.from_number_input = QSpinBox()
-        self.from_number_input.setRange(1,20)
-        self.from_number_input.setFixedSize(50,40)
-        self.from_number_input.setFont(font)
+        label_from_date = QLabel("از تاریخ")
+        label_from_date.setFont(font)
+        self.text_edit_from_date = QTextEdit()
+        self.text_edit_from_date.setFixedSize(150,30)
+        self.text_edit_from_date.setFont(font)
+        self.text_edit_from_date.setPlaceholderText("yyyy/mm/dd")
 
-        lable_from_number_input = QLabel("از صفحه ")
-        lable_from_number_input.setFont(font)
+        label_to_date = QLabel("تا تاریخ")
+        label_to_date.setFont(font)
 
+        self.text_edit_to_date = QTextEdit()
+        self.text_edit_to_date.setFixedSize(150,30)
+        self.text_edit_to_date.setFont(font)
+        self.text_edit_to_date.setPlaceholderText("yyyy/mm/dd")
 
-        self.to_number_input = QSpinBox()
-        self.to_number_input.setRange(1,50)
-        self.to_number_input.setFixedSize(50,40)
-        self.to_number_input.setFont(font)
-
-        lable_to_number_input = QLabel("تا صفحه")
-        lable_to_number_input.setFont(font)
-
-
-
-        row_2.addWidget(self.from_number_input)
-        row_2.addWidget(lable_from_number_input)
-        row_2.addWidget(self.to_number_input)
-        row_2.addWidget(lable_to_number_input)
+        row_2.addWidget(label_from_date)
+        row_2.addWidget(self.text_edit_from_date)
+        row_2.addWidget(label_to_date)
+        row_2.addWidget(self.text_edit_to_date)
 
 
         layout.addLayout(row_1)
@@ -107,6 +109,14 @@ class MainWindow (QMainWindow) :
         layout.addWidget(start_button)
         start_button.clicked.connect(self.start_button_handeler)
         
+    def show_invalid_date_alert (self) : 
+
+        alert = QMessageBox(self)
+        alert.setWindowTitle("Alert")
+        alert.setText("فرمت اشتباه تاریخ")
+        alert.setIcon(QMessageBox.Critical) 
+        alert.setStandardButtons(QMessageBox.Ok)
+        alert.exec_()
 
     
     def update_check_boxes (self) :
@@ -121,11 +131,23 @@ class MainWindow (QMainWindow) :
     
 
     def start_button_handeler (self) : 
-        run_script(
-            self.from_number_input.value(),
-            self.to_number_input.value(),
-            self.selected_codes,
+
+        # check format date 
+        if not date_re.findall(self.text_edit_from_date.toPlainText()) : 
+            self.show_invalid_date_alert()
+
+        elif not date_re.findall(self.text_edit_to_date.toPlainText()) : 
+            self.show_invalid_date_alert()   
+        else : 
+            task = Thread(
+                target=get_by_date,
+                args=[
+                    self.text_edit_from_date.toPlainText(),
+                    self.text_edit_to_date.toPlainText(),
+                    self.selected_codes,
+                ]
             )
+            task.start()
 
 
 
