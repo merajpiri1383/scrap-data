@@ -51,7 +51,7 @@ def get_info_code_31 (href,date) :
 
     print("start scrapping link 31 code ...")
 
-    new_href = f"{href.split("sheetId")[0]}&sheetId=4"
+    new_href = href.split("sheetId")[0] + "&sheetId=4"
 
     driver.get(new_href)
 

@@ -71,7 +71,7 @@ def get_info_3_month (namad,date,url,title) :
 
     print("start scrapping link 10 code ...")
 
-    new_href = f"{url.split("sheetId")[0]}&sheetId=22"
+    new_href = url.split("sheetId")[0] + "&sheetId=22"
 
     driver.get(new_href)
     sleep(.2)
@@ -89,7 +89,7 @@ def get_info_3_month (namad,date,url,title) :
             if hazineh_ha : 
                 hazineh_ha = str(hazineh_ha).translate(english_translate)
 
-    new_href = f"{url.split("sheetId")[0]}&sheetId=20"
+    new_href = url.split("sheetId")[0] + "&sheetId=20"
 
     driver.get(new_href)
     sleep(.2)
@@ -126,13 +126,13 @@ def get_info_3_month (namad,date,url,title) :
         baravord_baha_ta_payan_sal = None
 
 
-    new_href = f"{url.split("sheetId")[0]}&sheetId=1"
+    new_href = url.split("sheetId")[0] + "&sheetId=1"
 
     driver.get(new_href)
     sleep(.2)
     
 
-    new_href = f"{url.split("sheetId")[0]}&sheetId=1"
+    new_href = url.split("sheetId")[0] + "&sheetId=1"
 
     driver.get(new_href)
     sleep(.2)
@@ -200,7 +200,7 @@ def get_info_3_month (namad,date,url,title) :
                 sod_khales_sal_ghabl = str(driver.execute_script("return arguments[0].innerText",tds[3])).translate(english_translate)
                 sod_khales_darsad = str(driver.execute_script("return arguments[0].innerText",tds[5])).translate(english_translate)
 
-        new_href = f"{url.split("sheetId")[0]}&sheetId=0"
+        new_href = url.split("sheetId")[0] + "&sheetId=0"
 
         driver.get(new_href)
         sleep(.2)
@@ -302,7 +302,7 @@ def get_info_3_month (namad,date,url,title) :
             return None
         
 
-        new_href = f"{url.split("sheetId")[0]}&sheetId=9"
+        new_href = url.split("sheetId")[0] + "&sheetId=9"
 
         driver.get(new_href)
         sleep(.2)

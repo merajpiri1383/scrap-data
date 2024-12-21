@@ -2,6 +2,8 @@ import sys
 from page import code_3_month,code_month_31,code_year,code_month
 from main import get_by_date
 from threading import Thread
+import multiprocessing
+from time import sleep
 from PyQt5.QtWidgets import (
     QMainWindow,
     QApplication,
@@ -24,6 +26,7 @@ import re
 date_re = re.compile("^[0-9]{4}/[0-9]{2}/[0-9]{2}$")
 
 
+
 class MainWindow (QMainWindow) : 
 
     def __init__ (self) : 
@@ -36,8 +39,8 @@ class MainWindow (QMainWindow) :
         self.setCentralWidget(central_widget)
 
         # layout 
-        layout = QVBoxLayout()
-        central_widget.setLayout(layout)
+        self.layout = QVBoxLayout()
+        central_widget.setLayout(self.layout)
 
         # change font 
         font = QFont()
@@ -99,15 +102,17 @@ class MainWindow (QMainWindow) :
         row_2.addWidget(self.text_edit_to_date)
 
 
-        layout.addLayout(row_1)
-        layout.addLayout(row_2)
+        self.layout.addLayout(row_1)
+        self.layout.addLayout(row_2)
+        
 
 
         # start button
 
-        start_button = QPushButton("Start Scraping ...")
-        layout.addWidget(start_button)
-        start_button.clicked.connect(self.start_button_handeler)
+        self.start_button = QPushButton("Start")
+        self.layout.addWidget(self.start_button)
+        
+        self.start_button.clicked.connect(self.start_button_handeler)
         
     def show_invalid_date_alert (self) : 
 
@@ -129,9 +134,8 @@ class MainWindow (QMainWindow) :
         if self.check_box_52.isChecked() : 
             self.selected_codes.append(code_year)
     
-
-    def start_button_handeler (self) : 
-
+    def start(self) : 
+        print("start")
         # check format date 
         if not date_re.findall(self.text_edit_from_date.toPlainText()) : 
             self.show_invalid_date_alert()
@@ -139,7 +143,7 @@ class MainWindow (QMainWindow) :
         elif not date_re.findall(self.text_edit_to_date.toPlainText()) : 
             self.show_invalid_date_alert()   
         else : 
-            task = Thread(
+            self.task = multiprocessing.Process(
                 target=get_by_date,
                 args=[
                     self.text_edit_from_date.toPlainText(),
@@ -147,7 +151,20 @@ class MainWindow (QMainWindow) :
                     self.selected_codes,
                 ]
             )
-            task.start()
+            self.task.start()
+
+    def stop (self) : 
+        print("stop")
+        self.task.terminate()
+
+    def start_button_handeler (self) : 
+        if self.start_button.text() == "Start" : 
+            self.start()
+            self.start_button.setText("Stop")
+        elif self.start_button.text() == "Stop" : 
+            self.stop()
+            self.start_button.setText("Start")
+        
 
 
 
